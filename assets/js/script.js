@@ -16,9 +16,40 @@ let quizQuest4 = new defineQuest("what3", "who3", "when3", "where3", "why3", "wh
 console.log(quizQuest1.choice1);
 console.log(quizQuest1.choice2 === quizQuest1.questAnswer);
 
-//define the set of all questions to be asked
+// define the set of all questions to be asked
 let questions = [quizQuest1, quizQuest2, quizQuest3, quizQuest4];
 let currentQuest = questions[0];
 
 console.log(currentQuest.questPrompt);
 console.log(currentQuest.choice2 === currentQuest.questAnswer);
+
+
+// identify area to create choice buttons
+let questContainer = document.querySelector("#quest-container");
+// insert a button for each choice
+let createButtons = function(button1, button2, button3, button4) {
+    // TODO: create for loop
+    let insButton1 = document.createElement("button");
+    insButton1.innerText = button1;
+    questContainer.appendChild(insButton1);
+    let insButton2 = document.createElement("button");
+    insButton2.innerText = button2;
+    questContainer.appendChild(insButton2);
+    let insButton3 = document.createElement("button");
+    insButton3.innerText = button3;
+    questContainer.appendChild(insButton3);
+    let insButton4 = document.createElement("button");
+    insButton4.innerText = button4;
+    questContainer.appendChild(insButton4);
+ }
+ createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
+
+
+// Answer verification
+questContainer.addEventListener("click", function(event) {
+    if (event.target.innerText === currentQuest.questAnswer) {
+        console.log("Correct!");
+    } else {
+        console.log("Wrong!");
+    }
+});
