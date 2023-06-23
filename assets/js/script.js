@@ -52,20 +52,13 @@ let onLoad = function() {
     paraEl.innerText = "TEST YOUR KNOWLEDGE OF JAVASCRIPT IN A TIMED QUIZ. YOU LOSE TIME FOR WRONG ANSWERS!";
     let startButton = document.createElement("button");
         startButton.innerText = "START QUIZ";
-        startButton.setAttribute("class", "button1")
+        startButton.setAttribute("class", "button1");
         divEl.appendChild(startButton);
     // on click empty the start screen content and begin the questions
     startButton.addEventListener("click", function(event) {
-        cleanup();
         setTime();
         advanceQuest();
     });
-}
-
-let cleanup = function() {
-    headingEl.innerText = "";
-    paraEl.innerText = "";
-    divEl.innerHTML = "";
 }
 
 // starts a timer and ends the quiz when timer reaches zero
@@ -83,19 +76,26 @@ let setTime = function() {
 // start/continue question prompts
 let advanceQuest = function() {
     currentQuest = questions[questionIndex];
+    cleanUp();
     askQuest(currentQuest.questPrompt);
     createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
 }
 
+let cleanUp = function() {
+    headingEl.innerText = "";
+    paraEl.innerText = "";
+    divEl.innerHTML = "";
+    choiceContainer.innerHTML = "";
+    highScores.innerHTML = "";
+}
+
 // function to insert the question prompt
 let askQuest  = function(questText) {
-    headingEl.innerText = questText
+    headingEl.innerText = questText;
 }
 
 // function to insert a button for each choice
 let createButtons = function(button1, button2, button3, button4) {
-    // clear previous, if any
-    choiceContainer.innerHTML = "";
     // TODO: create for loop
     let insButton1 = document.createElement("button");
         insButton1.innerText = button1;
@@ -128,10 +128,8 @@ let isGameOver = function() {
 
 // resets screen content and defines after quiz event flow
 let gameOver = function() {
+    cleanUp();
     timerEl.innerText = "";
-    choiceContainer.innerHTML = "";
-    cleanup();
-    headingEl.innerText = "GAME OVER";
     paraEl.innerText = "YOUR SCORE: " + startTimer;
     let initialLabel = document.createElement("label");
         initialLabel.innerText = "ENTER INITIALS: ";
@@ -165,8 +163,7 @@ let sortHighScores = function() {
 
 // resets screen content and creates list item for each player and their score
 let populateHighScores = function() {
-    cleanup();
-    highScores.innerHTML = "";
+    cleanUp();
     headingEl.innerText = "HIGH SCORES";
     for (let i = 0; i < scoresArr.length; i ++) {
         playerScore = document.createElement("li");
