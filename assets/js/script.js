@@ -55,6 +55,7 @@ let onLoad = function() {
         startContent.appendChild(explainPara);
     let startButton = document.createElement("button");
         startButton.innerText = "START QUIZ";
+        startButton.setAttribute("class", "button1")
         startContent.appendChild(startButton);  
 }
 
@@ -89,15 +90,19 @@ let createButtons = function(button1, button2, button3, button4) {
     // TODO: create for loop
     let insButton1 = document.createElement("button");
         insButton1.innerText = button1;
+        insButton1.setAttribute("class", "button1");
         choiceContainer.appendChild(insButton1);
     let insButton2 = document.createElement("button");
         insButton2.innerText = button2;
+        insButton2.setAttribute("class", "button2");
         choiceContainer.appendChild(insButton2);
     let insButton3 = document.createElement("button");
         insButton3.innerText = button3;
+        insButton3.setAttribute("class", "button3");
         choiceContainer.appendChild(insButton3);
     let insButton4 = document.createElement("button");
         insButton4.innerText = button4;
+        insButton4.setAttribute("class", "button4");
         choiceContainer.appendChild(insButton4);
 }
 
@@ -133,6 +138,7 @@ let gameOver = function() {
         endContent.appendChild(initialInput);
     let submitButton = document.createElement("button");
         submitButton.innerText = "SUBMIT";
+        submitButton.setAttribute("class", "button2")
         endContent.appendChild(submitButton);  
 
     submitButton.addEventListener("click", function() {
@@ -165,7 +171,8 @@ let populateHighScores = function() {
         highScores.appendChild(playerScore);
     }
     let retryButton = document.createElement("button");
-        retryButton.innerText = "TRY AGAIN";
+        retryButton.innerText = "TRY AGAIN"
+        retryButton.setAttribute("class", "button3");
         endContent.appendChild(retryButton);  
 
     retryButton.addEventListener("click", function() {

@@ -1,0 +1,47 @@
+:root {
+    --col1: #272727;
+    --col2: #ffffff;
+    --col3: #14a76c;
+    --col4: #ff652f;
+    --col5: #ffe400;
+    --col6: #1260cc;
+}
+
+body {
+    background-color: var(--col1);
+    color: var(--col2);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: x-large;
+    text-align: center;
+}
+
+button {
+    width: 100%;
+    font-size: large;
+    border-radius: 5;
+    border: none;
+    padding: 15px 30px;
+    display: block;
+    margin-top: 10px;
+}
+
+.button1 {
+    background-color: var(--col4);
+}
+
+.button2 {
+    background-color: var(--col5);
+}
+
+.button3 {
+    background-color: var(--col3);
+}
+
+.button4 {
+    background-color: var(--col6);
+}
+
+
+ol {
+    list-style-position: inside;
+}
