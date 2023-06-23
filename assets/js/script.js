@@ -4,6 +4,7 @@ let headerQuest = document.querySelector("#header-quest"); // identify area to i
 let choiceContainer = document.querySelector("#quest-container"); // identify area to create choice buttons
 let endContent = document.querySelector("#end-content"); 
 let highScores = document.querySelector("#high-scores");
+let timerEl = document.querySelector("#timer");
 
 // create a template for creating questions
 let defineQuest = function(questPrompt, choice1, choice2, choice3, choice4, questAnswer) {
@@ -28,7 +29,9 @@ let questionIndex = 0;
 let currentQuest = questions[0];
 let startTimer = 60;
 let scoresArr = [];
+let timerInterval;
 
+// pre populates the scores array if the local storage is empty
 if (localStorage.getItem("pScores") === null) {
     scoresArr = [
         {name: "AAA", score: 60},
@@ -42,7 +45,7 @@ if (localStorage.getItem("pScores") === null) {
   }
 console.log(scoresArr);
 
-//setup the starting page
+// setup the starting page
 let onLoad = function() {
     let startHeader = document.createElement("h1");
         startHeader.innerText = "JAVASCRIPT CODING QUIZ";
@@ -55,22 +58,23 @@ let onLoad = function() {
         startContent.appendChild(startButton);  
 }
 
+// starts a timer and ends the quiz when timer reaches zero
+let setTime = function() {
+    timerInterval = setInterval(function() {
+      timerEl.innerText = startTimer;
+      startTimer--;
+      if(startTimer === 0) {
+        clearInterval(timerInterval);
+        gameOver();
+      }
+    }, 1000);
+};
+
 // start/continue question prompts
 let advanceQuest = function() {
 currentQuest = questions[questionIndex];
 askQuest(currentQuest.questPrompt);
 createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
-}
-
-// advance question index and check if the quiz is over after each choice is made
-let isGameOver = function() {
-    questionIndex ++;
-    console.log(questionIndex);
-    if (questionIndex === questions.length) {
-        gameOver();
-    } else {
-        advanceQuest();
-    }
 }
 
 // function to insert the question prompt
@@ -97,8 +101,21 @@ let createButtons = function(button1, button2, button3, button4) {
         choiceContainer.appendChild(insButton4);
 }
 
-// define after quiz event flow
+// advance question index and check if the quiz is over after each choice is made
+let isGameOver = function() {
+    questionIndex ++;
+    console.log(questionIndex);
+    if (questionIndex === questions.length) {
+        clearInterval(timerInterval);
+        gameOver();
+    } else {
+        advanceQuest();
+    }
+}
+
+// resets screen and defines after quiz event flow
 let gameOver = function() {
+    timerEl.innerText = "";
     headerQuest.innerText = "";
     choiceContainer.innerHTML = "";
     console.log("Game over!");
@@ -124,7 +141,6 @@ let gameOver = function() {
         localStorage.setItem("pScores", JSON.stringify(scoresArr));
         populateHighScores();
     });
-    
 }
 
 // sort the list of high scores order decending
@@ -160,13 +176,14 @@ let populateHighScores = function() {
 // execute application
 onLoad();
 
-//on click empty the start screen content and begin the questions
+// on click empty the start screen content and begin the questions
 startContent.addEventListener("click", function(event) {
     startContent.innerHTML = "";
+    setTime();
     advanceQuest();
 });
 
-// Answer verification using an event listener
+// answer verification using an event listener
 choiceContainer.addEventListener("click", function(event) {
     if (event.target.innerText === currentQuest.questAnswer) {
         console.log("Correct!");
