@@ -1,8 +1,8 @@
-//define references to HTML elements
-let startContent = document.querySelector("#start-content"); 
-let headerQuest = document.querySelector("#header-quest"); // identify area to insert question prompt
-let choiceContainer = document.querySelector("#quest-container"); // identify area to create choice buttons
-let endContent = document.querySelector("#end-content"); 
+//define references to HTML elements; 
+let headingEl = document.getElementById("heading");
+let paraEl = document.getElementById("paragraph");
+let divEl = document.getElementById("division");
+let choiceContainer = document.querySelector("#choice-container");
 let highScores = document.querySelector("#high-scores");
 let timerEl = document.querySelector("#timer");
 
@@ -16,10 +16,11 @@ let defineQuest = function(questPrompt, choice1, choice2, choice3, choice4, ques
     this.questAnswer = questAnswer;
 }
 // create the content for the questions, potential choices to pick from, and the correct answer
-let quizQuest1 = new defineQuest("what", "who", "when", "where", "why", "when");
-let quizQuest2 = new defineQuest("what1", "who1", "when1", "where1", "why1", "when1");
-let quizQuest3 = new defineQuest("what2", "who2", "when2", "where2", "why2", "where2");
-let quizQuest4 = new defineQuest("what3", "who3", "when3", "where3", "why3", "why3");
+let quizQuest1 = new defineQuest("WHO'S ON FIRST", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHO");
+let quizQuest2 = new defineQuest("WHAT'S ON SECOND", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHAT");
+let quizQuest3 = new defineQuest("I DON'T KNOW IS ON THIRD.", "WHO", "WHAT", "I DON'T KNOW", "WHY", "I DON'T KNOW");
+let quizQuest4 = new defineQuest("LEFT FIELDER'S NAME", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHY");
+// its an abbott and costello joke ;)
 
 // define the set of all questions to be asked
 let questions = [quizQuest1, quizQuest2, quizQuest3, quizQuest4];
@@ -38,26 +39,33 @@ let scoresArrDefault = [
     {name: "EEE", score: 40},
 ];
 
-// pre populates the scores array if the local storage is empty
+// pre-populates the scores array if the local storage is empty
 if (localStorage.getItem("pScores") === null) {
     scoresArr = scoresArrDefault;
   } else {
     scoresArr = JSON.parse(localStorage.getItem("pScores"));
   }
-console.log(scoresArr);
 
 // setup the starting page
 let onLoad = function() {
-    let startHeader = document.createElement("h1");
-        startHeader.innerText = "JAVASCRIPT CODING QUIZ";
-        startContent.appendChild(startHeader);
-    let explainPara = document.createElement("p");
-        explainPara.innerText = "TEST YOUR KNOWLEDGE OF JAVASCRIPT IN A TIMED QUIZ. YOU LOSE TIME FOR WRONG ANSWERS!";
-        startContent.appendChild(explainPara);
+    headingEl.innerText = "JAVASCRIPT CODING QUIZ";
+    paraEl.innerText = "TEST YOUR KNOWLEDGE OF JAVASCRIPT IN A TIMED QUIZ. YOU LOSE TIME FOR WRONG ANSWERS!";
     let startButton = document.createElement("button");
         startButton.innerText = "START QUIZ";
         startButton.setAttribute("class", "button1")
-        startContent.appendChild(startButton);  
+        divEl.appendChild(startButton);
+    // on click empty the start screen content and begin the questions
+    startButton.addEventListener("click", function(event) {
+        cleanup();
+        setTime();
+        advanceQuest();
+    });
+}
+
+let cleanup = function() {
+    headingEl.innerText = "";
+    paraEl.innerText = "";
+    divEl.innerHTML = "";
 }
 
 // starts a timer and ends the quiz when timer reaches zero
@@ -70,18 +78,18 @@ let setTime = function() {
         gameOver();
       }
     }, 1000);
-};
+}
 
 // start/continue question prompts
 let advanceQuest = function() {
-currentQuest = questions[questionIndex];
-askQuest(currentQuest.questPrompt);
-createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
+    currentQuest = questions[questionIndex];
+    askQuest(currentQuest.questPrompt);
+    createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
 }
 
 // function to insert the question prompt
 let askQuest  = function(questText) {
-    headerQuest.innerText = questText
+    headingEl.innerText = questText
 }
 
 // function to insert a button for each choice
@@ -110,7 +118,6 @@ let createButtons = function(button1, button2, button3, button4) {
 // advance question index and check if the quiz is over after each choice is made
 let isGameOver = function() {
     questionIndex ++;
-    console.log(questionIndex);
     if (questionIndex === questions.length) {
         clearInterval(timerInterval);
         gameOver();
@@ -119,28 +126,23 @@ let isGameOver = function() {
     }
 }
 
-// resets screen and defines after quiz event flow
+// resets screen content and defines after quiz event flow
 let gameOver = function() {
     timerEl.innerText = "";
-    headerQuest.innerText = "";
     choiceContainer.innerHTML = "";
-    console.log("Game over!");
-    let endHeader = document.createElement("h1");
-        endHeader.innerText = "GAME OVER";
-        endContent.appendChild(endHeader);
-    let resultPara = document.createElement("p");
-        resultPara.innerText = "YOUR SCORE: " + startTimer;
-        endContent.appendChild(resultPara);
+    cleanup();
+    headingEl.innerText = "GAME OVER";
+    paraEl.innerText = "YOUR SCORE: " + startTimer;
     let initialLabel = document.createElement("label");
         initialLabel.innerText = "ENTER INITIALS: ";
-        endContent.appendChild(initialLabel);
+        divEl.appendChild(initialLabel);
     let initialInput = document.createElement("input");
         initialInput.setAttribute("maxlength", "3");
-        endContent.appendChild(initialInput);
+        divEl.appendChild(initialInput);
     let submitButton = document.createElement("button");
         submitButton.innerText = "SUBMIT";
         submitButton.setAttribute("class", "button2")
-        endContent.appendChild(submitButton);  
+        divEl.appendChild(submitButton);  
 
     submitButton.addEventListener("click", function() {
         scoresArr.push({name: initialInput.value.toUpperCase(), score: startTimer})
@@ -163,24 +165,23 @@ let sortHighScores = function() {
 
 // resets screen content and creates list item for each player and their score
 let populateHighScores = function() {
-    endContent.innerHTML = "";
+    cleanup();
     highScores.innerHTML = "";
-    headerQuest.innerText = "HIGH SCORES";
+    headingEl.innerText = "HIGH SCORES";
     for (let i = 0; i < scoresArr.length; i ++) {
         playerScore = document.createElement("li");
         playerScore.innerText = scoresArr[i].name + " - " + scoresArr[i].score;
-        console.log(playerScore.innerText);
         highScores.appendChild(playerScore);
     }
     let retryButton = document.createElement("button");
-        retryButton.innerText = "TRY AGAIN"
+        retryButton.innerText = "TRY AGAIN";
         retryButton.setAttribute("class", "button3");
-        endContent.appendChild(retryButton);  
+        divEl.appendChild(retryButton);  
 
     let clearButton = document.createElement("button");
-        clearButton.innerText = "RESET SCORES"
+        clearButton.innerText = "RESET SCORES";
         clearButton.setAttribute("class", "button4");
-        endContent.appendChild(clearButton); 
+        divEl.appendChild(clearButton); 
 
     retryButton.addEventListener("click", function() {
         location.reload();
@@ -188,21 +189,14 @@ let populateHighScores = function() {
     clearButton.addEventListener("click", function() {
         localStorage.removeItem("pScores");
         scoresArr = scoresArrDefault;
-        populateHighScores()
+        populateHighScores();
     });
 }
 
 // execute application
 onLoad();
 
-// on click empty the start screen content and begin the questions
-startContent.addEventListener("click", function(event) {
-    startContent.innerHTML = "";
-    setTime();
-    advanceQuest();
-});
-
-// answer verification using an event listener
+// answer verification using an event listener, remove time from the timer for wrong answers
 choiceContainer.addEventListener("click", function(event) {
     if (event.target.innerText === currentQuest.questAnswer) {
         console.log("Correct!");
