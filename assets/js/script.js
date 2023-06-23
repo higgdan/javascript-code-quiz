@@ -28,18 +28,19 @@ let questions = [quizQuest1, quizQuest2, quizQuest3, quizQuest4];
 let questionIndex = 0;
 let currentQuest = questions[0];
 let startTimer = 60;
-let scoresArr = [];
 let timerInterval;
+let scoresArr = [];
+let scoresArrDefault = [
+    {name: "AAA", score: 60},
+    {name: "BBB", score: 55},
+    {name: "CCC", score: 50},
+    {name: "DDD", score: 45},
+    {name: "EEE", score: 40},
+];
 
 // pre populates the scores array if the local storage is empty
 if (localStorage.getItem("pScores") === null) {
-    scoresArr = [
-        {name: "AAA", score: 60},
-        {name: "BBB", score: 55},
-        {name: "CCC", score: 50},
-        {name: "DDD", score: 45},
-        {name: "EEE", score: 40},
-    ];
+    scoresArr = scoresArrDefault;
   } else {
     scoresArr = JSON.parse(localStorage.getItem("pScores"));
   }
@@ -163,6 +164,7 @@ let sortHighScores = function() {
 // resets screen content and creates list item for each player and their score
 let populateHighScores = function() {
     endContent.innerHTML = "";
+    highScores.innerHTML = "";
     headerQuest.innerText = "HIGH SCORES";
     for (let i = 0; i < scoresArr.length; i ++) {
         playerScore = document.createElement("li");
@@ -175,8 +177,18 @@ let populateHighScores = function() {
         retryButton.setAttribute("class", "button3");
         endContent.appendChild(retryButton);  
 
+    let clearButton = document.createElement("button");
+        clearButton.innerText = "RESET SCORES"
+        clearButton.setAttribute("class", "button4");
+        endContent.appendChild(clearButton); 
+
     retryButton.addEventListener("click", function() {
-        location.reload()
+        location.reload();
+    });
+    clearButton.addEventListener("click", function() {
+        localStorage.removeItem("pScores");
+        scoresArr = scoresArrDefault;
+        populateHighScores()
     });
 }
 

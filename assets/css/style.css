@@ -43,5 +43,7 @@ button {
 
 
 ol {
-    list-style-position: inside;
+    font-size: xx-large;
+    margin-left: 5%;
+    font-weight: bolder;
 }
