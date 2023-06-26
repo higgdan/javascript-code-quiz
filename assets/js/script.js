@@ -7,7 +7,7 @@ let highScores = document.querySelector("#high-scores");
 let timerEl = document.querySelector("#timer");
 
 // create a template for creating questions
-let defineQuest = function(questPrompt, choice1, choice2, choice3, choice4, questAnswer) {
+let DefineQuest = function(questPrompt, choice1, choice2, choice3, choice4, questAnswer) {
     this.questPrompt = questPrompt;
     this.choice1 = choice1;
     this.choice2 = choice2;
@@ -16,10 +16,10 @@ let defineQuest = function(questPrompt, choice1, choice2, choice3, choice4, ques
     this.questAnswer = questAnswer;
 }
 // create the content for the questions, potential choices to pick from, and the correct answer
-let quizQuest1 = new defineQuest("WHO'S ON FIRST", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHO");
-let quizQuest2 = new defineQuest("WHAT'S ON SECOND", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHAT");
-let quizQuest3 = new defineQuest("I DON'T KNOW IS ON THIRD.", "WHO", "WHAT", "I DON'T KNOW", "WHY", "I DON'T KNOW");
-let quizQuest4 = new defineQuest("LEFT FIELDER'S NAME", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHY");
+let quizQuest1 = new DefineQuest("WHO'S ON FIRST", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHO");
+let quizQuest2 = new DefineQuest("WHAT'S ON SECOND", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHAT");
+let quizQuest3 = new DefineQuest("I DON'T KNOW IS ON THIRD.", "WHO", "WHAT", "I DON'T KNOW", "WHY", "I DON'T KNOW");
+let quizQuest4 = new DefineQuest("LEFT FIELDER'S NAME", "WHO", "WHAT", "I DON'T KNOW", "WHY", "WHY");
 // its an abbott and costello joke ;)
 
 // define the set of all questions to be asked
@@ -41,7 +41,7 @@ let scoresArrDefault = [
 
 // pre-populates the scores array if the local storage is empty
 if (localStorage.getItem("pScores") === null) {
-    scoresArr = scoresArrDefault;
+    scoresArr = Array.from(scoresArrDefault); // copies the scoresArrDefault, not equate to
   } else {
     scoresArr = JSON.parse(localStorage.getItem("pScores"));
   }
@@ -66,7 +66,7 @@ let setTime = function() {
     timerEl.innerText = startTimer;
     timerInterval = setInterval(function() {
         startTimer--;
-        timerEl.innerText = startTimer;
+        timerEl.innerText = startTimer.toString().padStart(2, '0');
         if(startTimer === 0) {
         clearInterval(timerInterval);
         gameOver();
@@ -122,7 +122,8 @@ let gameOver = function() {
     cleanUp();
     timerEl.innerText = "";
     headingEl.innerText = "GAME OVER";
-    paraEl.innerText = "YOUR SCORE: " + startTimer;
+    if (startTimer < 0) {startTimer = 0};
+    paraEl.innerText = "YOUR SCORE: " + startTimer.toString().padStart(2, '0');
     let initialLabel = document.createElement("label");
         initialLabel.innerText = "ENTER INITIALS: ";
         divEl.appendChild(initialLabel);
@@ -137,10 +138,15 @@ let gameOver = function() {
         divEl.appendChild(submitButton);  
 
     submitButton.addEventListener("click", function() {
+        if (initialInput.value === "") {
+            window.alert("YOU MUST ENTER YOUR INITIALS!");
+            gameOver();
+        } else {
         scoresArr.push({name: initialInput.value.toUpperCase(), score: startTimer})
         sortHighScores();
         localStorage.setItem("pScores", JSON.stringify(scoresArr));
         populateHighScores();
+        }
     });
 }
 
@@ -161,7 +167,7 @@ let populateHighScores = function() {
     headingEl.innerText = "HIGH SCORES";
     for (let i = 0; i < scoresArr.length; i ++) {
         playerScore = document.createElement("li");
-        playerScore.innerText = scoresArr[i].name + " - " + scoresArr[i].score;
+        playerScore.innerText = scoresArr[i].name + " - " + scoresArr[i].score.toString().padStart(2, '0');
         highScores.appendChild(playerScore);
     }
     let retryButton = document.createElement("button");
