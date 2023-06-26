@@ -15,6 +15,21 @@ body {
     text-align: center;
 }
 
+input {
+    font-size: xx-large;
+    font-weight: bolder;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.25ch;
+    border: none;
+    outline: none;
+    margin: 10px;
+}
+
+::placeholder {
+    font-size: x-large;
+}
+
 button {
     width: 100%;
     font-size: large;
@@ -23,6 +38,7 @@ button {
     padding: 15px 30px;
     display: block;
     margin-top: 10px;
+    cursor: pointer;
 }
 
 .button1 {
@@ -44,6 +60,7 @@ button {
 
 ol {
     font-size: xx-large;
-    margin-left: 5%;
     font-weight: bolder;
+    letter-spacing: 0.25ch;
+    margin-left: 5%;
 }

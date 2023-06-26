@@ -54,7 +54,7 @@ let onLoad = function() {
         startButton.innerText = "START QUIZ";
         startButton.setAttribute("class", "button1");
         divEl.appendChild(startButton);
-    // on click empty the start screen content and begin the questions
+    // on click start timer and begin the questions
     startButton.addEventListener("click", function(event) {
         setTime();
         advanceQuest();
@@ -63,22 +63,24 @@ let onLoad = function() {
 
 // starts a timer and ends the quiz when timer reaches zero
 let setTime = function() {
+    timerEl.innerText = startTimer;
     timerInterval = setInterval(function() {
-      timerEl.innerText = startTimer;
-      startTimer--;
-      if(startTimer === 0) {
+        startTimer--;
+        timerEl.innerText = startTimer;
+        if(startTimer === 0) {
         clearInterval(timerInterval);
         gameOver();
       }
     }, 1000);
 }
 
-// start/continue question prompts
+// resets screen and start/continue question prompts
 let advanceQuest = function() {
     currentQuest = questions[questionIndex];
     cleanUp();
     askQuest(currentQuest.questPrompt);
-    createButtons(currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4);
+    let choiceButtons = [currentQuest.choice1, currentQuest.choice2, currentQuest.choice3, currentQuest.choice4];
+    createButtons(choiceButtons);
 }
 
 let cleanUp = function() {
@@ -95,24 +97,13 @@ let askQuest  = function(questText) {
 }
 
 // function to insert a button for each choice
-let createButtons = function(button1, button2, button3, button4) {
-    // TODO: create for loop
-    let insButton1 = document.createElement("button");
-        insButton1.innerText = button1;
-        insButton1.setAttribute("class", "button1");
-        choiceContainer.appendChild(insButton1);
-    let insButton2 = document.createElement("button");
-        insButton2.innerText = button2;
-        insButton2.setAttribute("class", "button2");
-        choiceContainer.appendChild(insButton2);
-    let insButton3 = document.createElement("button");
-        insButton3.innerText = button3;
-        insButton3.setAttribute("class", "button3");
-        choiceContainer.appendChild(insButton3);
-    let insButton4 = document.createElement("button");
-        insButton4.innerText = button4;
-        insButton4.setAttribute("class", "button4");
-        choiceContainer.appendChild(insButton4);
+let createButtons = function(buttons) {
+    for (let i = 1; i <= buttons.length; i++) {
+        let insButton = document.createElement("button");
+            insButton.innerText = buttons[i - 1];
+            insButton.setAttribute("class", "button" + [i]);
+            choiceContainer.appendChild(insButton);
+    }
 }
 
 // advance question index and check if the quiz is over after each choice is made
@@ -130,12 +121,15 @@ let isGameOver = function() {
 let gameOver = function() {
     cleanUp();
     timerEl.innerText = "";
+    headingEl.innerText = "GAME OVER";
     paraEl.innerText = "YOUR SCORE: " + startTimer;
     let initialLabel = document.createElement("label");
         initialLabel.innerText = "ENTER INITIALS: ";
         divEl.appendChild(initialLabel);
     let initialInput = document.createElement("input");
         initialInput.setAttribute("maxlength", "3");
+        initialInput.setAttribute("placeholder", "———");
+        initialInput.setAttribute("size", "3");
         divEl.appendChild(initialInput);
     let submitButton = document.createElement("button");
         submitButton.innerText = "SUBMIT";
@@ -174,7 +168,6 @@ let populateHighScores = function() {
         retryButton.innerText = "TRY AGAIN";
         retryButton.setAttribute("class", "button3");
         divEl.appendChild(retryButton);  
-
     let clearButton = document.createElement("button");
         clearButton.innerText = "RESET SCORES";
         clearButton.setAttribute("class", "button4");
