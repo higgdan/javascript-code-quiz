@@ -5,6 +5,7 @@
     --col4: #ff652f;
     --col5: #ffe400;
     --col6: #1260cc;
+    --timerAfterShowHide: hidden;
 }
 
 body {
@@ -63,4 +64,16 @@ ol {
     font-weight: bolder;
     letter-spacing: 0.25ch;
     margin-left: 10%;
+}
+
+#timer {
+    display: inline;
+    position: relative;
+}
+
+#wrong-answer {
+    display: inline;
+    color: red;
+    position: absolute;
+    margin: 0 10px;
 }

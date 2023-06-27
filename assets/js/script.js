@@ -5,6 +5,7 @@ let divEl = document.getElementById("division");
 let choiceContainer = document.querySelector("#choice-container");
 let highScores = document.querySelector("#high-scores");
 let timerEl = document.querySelector("#timer");
+let wrongAns = document.querySelector("#wrong-answer")
 
 // create a template for creating questions
 let DefineQuest = function(questPrompt, choice1, choice2, choice3, choice4, questAnswer) {
@@ -200,7 +201,12 @@ choiceContainer.addEventListener("click", function(event) {
         
     } else {
         console.log("Wrong!");
-        startTimer -= 5;
-        isGameOver();
+        startTimer -= 4;
+        wrongAns.innerText = "-5";
+        setTimeout(function() {
+            wrongAns.innerText = "";
+            isGameOver();
+        }, 500)
+        
     }
 });
